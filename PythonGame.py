@@ -7,6 +7,9 @@ import time
 import tkinter as tk
 import win32gui, win32con
 
+The_program_to_hide = win32gui.GetForegroundWindow()
+win32gui.ShowWindow(The_program_to_hide , win32con.SW_HIDE)
+
 time.sleep(1)
 
 root= tk.Tk()
@@ -110,8 +113,8 @@ count = 0
 grass_frames = []
 stone_frames = []
 
-grass_animation_path = "C:/Users/" + os.getlogin() + "/Desktop/shrunk/Textures/animations/dirt animation/frame "
-stone_animation_path = "C:/Users/" + os.getlogin() + "/Desktop/shrunk/Textures/animations/stone animation/frame "
+grass_animation_path = "C:/Users/" + os.getlogin() + "/Desktop/shrunk-master/shrunk-master/Textures/animations/dirt animation/frame "
+stone_animation_path = "C:/Users/" + os.getlogin() + "/Desktop/shrunk-master/shrunk-master/Textures/animations/stone animation/frame "
 while True:
     count += 1
     frame = pygame.image.load(grass_animation_path + str(count) + ".png")
