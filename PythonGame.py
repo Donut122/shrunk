@@ -10,8 +10,6 @@ from pathlib import Path
 
 path = Path(os.getcwd())
 
-The_program_to_hide = win32gui.GetForegroundWindow()
-win32gui.ShowWindow(The_program_to_hide , win32con.SW_HIDE)
 
 
 time.sleep(1)
@@ -19,7 +17,7 @@ time.sleep(1)
 root= tk.Tk()
 
 root.geometry('500x300')
-root.title("configuration ")
+root.title("configuration")
 
 world_size = tk.Entry(root)
 world_size.place(x=190, y=50)
@@ -50,11 +48,6 @@ time.sleep(1)
 
 width, height = 1500, 1000
 fps = 60
-WIN = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-pygame.display.set_caption("Game running @ " + str(width) + " x" + str(height))
-clock = pygame.time.Clock()
-
-pygame.display.init()
 
 x = 725
 xvel = 0
@@ -117,8 +110,11 @@ count = 0
 grass_frames = []
 stone_frames = []
 
+print("loading joe mamas textures")
+
 grass_animation_path = str(path) + "/Textures/animations/dirt animation/frame "
 stone_animation_path = str(path) + "/Textures/animations/stone animation/frame "
+day_night_path = str(path) + "/Textures/animations/day_night cycle/frame "
 while True:
     count += 1
     frame = pygame.image.load(Path(grass_animation_path + str(count) + ".png"))
@@ -137,7 +133,20 @@ while True:
 
 count = 0
 
+while True:
+    count += 1
+    if count == 145:
+        count += 38
+    frame = pygame.image.load(Path(day_night_path + str(count) + ".png"))
+    frame = pygame.transform.scale(frame, (block_tx_width, block_tx_height))
+    stone_frames.append(frame)
+    if count == 296:
+        break
 
+count = 0
+
+print("finished loading joes textures")
+print("genorating ur world cause ur too lazy to do it urself")
 while True:
     if layer > -1 and layer < 6:
         block = cube(0, 0, fall_checker * 50, layer * 50, "stone", stone_texture, pygame.Rect(50, 50, 50, 50))
@@ -182,7 +191,8 @@ while True:
             layer += 1
 
     if layer == 10:
-        ran = random.randint(0, (4 - count))
+        x1 = 4 - count
+        ran = random.randint(0, x1)
         if ran == 1:
             block = cube(0, 0, fall_checker * 50, layer * 50, "compact dirt", compact_dirt_texture, pygame.Rect(50, 50, 50, 50))
             blocks.append(block)
@@ -217,6 +227,15 @@ while True:
         if fall_checker == world_positive:
             fall_checker = 0
             break
+
+The_program_to_hide = win32gui.GetForegroundWindow()
+win32gui.ShowWindow(The_program_to_hide , win32con.SW_HIDE)
+
+WIN = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+pygame.display.set_caption("Game running @ " + str(width) + " x" + str(height))
+clock = pygame.time.Clock()
+
+pygame.display.init()
 pygame.init()
 ragdoll = 0
 xcor = 0
