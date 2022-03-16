@@ -6,6 +6,13 @@ import random
 import time
 import tkinter as tk
 import win32gui, win32con
+from pathlib import Path
+
+path = Path(os.getcwd())
+
+The_program_to_hide = win32gui.GetForegroundWindow()
+win32gui.ShowWindow(The_program_to_hide , win32con.SW_HIDE)
+
 
 time.sleep(1)
 
@@ -110,11 +117,11 @@ count = 0
 grass_frames = []
 stone_frames = []
 
-grass_animation_path = "C:/Users/" + os.getlogin() + "/Desktop/shrunk/Textures/animations/dirt animation/frame "
-stone_animation_path = "C:/Users/" + os.getlogin() + "/Desktop/shrunk/Textures/animations/stone animation/frame "
+grass_animation_path = str(path) + "/Textures/animations/dirt animation/frame "
+stone_animation_path = str(path) + "/Textures/animations/stone animation/frame "
 while True:
     count += 1
-    frame = pygame.image.load(grass_animation_path + str(count) + ".png")
+    frame = pygame.image.load(Path(grass_animation_path + str(count) + ".png"))
     frame = pygame.transform.scale(frame, (block_tx_width, block_tx_height))
     grass_frames.append(frame)
     if count == 6:
@@ -122,7 +129,7 @@ while True:
 count = 0
 while True:
     count += 1
-    frame = pygame.image.load(stone_animation_path + str(count) + ".png")
+    frame = pygame.image.load(Path(stone_animation_path + str(count) + ".png"))
     frame = pygame.transform.scale(frame, (block_tx_width, block_tx_height))
     stone_frames.append(frame)
     if count == 7:
