@@ -2,18 +2,17 @@ import os
 import random
 import time
 import tkinter as tk
-from pathlib import Path
 from sre_constants import NOT_LITERAL
 from tkinter.constants import S
 from typing import Counter
-
 import pygame
 import win32con
 import win32gui
 from win32api import GetSystemMetrics
-
 from perlin_noise import PerlinNoise
-path = Path(os.getcwd())
+path = os.getcwd()
+string = ""
+string2 = ""
 
 time.sleep(1)
 
@@ -186,6 +185,17 @@ loading_rect.y = height / 1.1
 WIN.blit(loading_screen, (0, 0))
 WIN.blit(loading_text, loading_rect)
 pygame.display.update()
+pointer_path = str(path) + "/Textures/pointers/"
+normal_pointer = pygame.image.load(pointer_path + "pointer.png")
+normal_pointer = pygame.transform.scale(normal_pointer, (25, 25))
+grass_pointer = pygame.image.load(pointer_path + "grass pointer.png")
+grass_pointer = pygame.transform.scale(grass_pointer, (25, 25))
+dirt_pointer = pygame.image.load(pointer_path + "dirt pointer.png")
+dirt_pointer = pygame.transform.scale(dirt_pointer, (25, 25))
+stone_pointer = pygame.image.load(pointer_path + "stone pointer.png")
+stone_pointer = pygame.transform.scale(stone_pointer, (25, 25))
+tree_pointer = pygame.image.load(pointer_path + "tree pointer.png")
+tree_pointer = pygame.transform.scale(tree_pointer, (25, 25))
 
 grass_texture = pygame.image.load(os.path.join('Textures', 'grass.png'))
 grass_texture = pygame.transform.scale(grass_texture, (block_tx_width, block_tx_height))
@@ -259,7 +269,7 @@ compact_dirt_animation_path = str(path) + "/Textures/animations/compact dirt ani
 day_night_path = str(path) + "/Textures/animations/day_night cycle/frame "
 while True:
     count += 1
-    frame = pygame.image.load(Path(grass_animation_path + str(count) + ".png"))
+    frame = pygame.image.load(grass_animation_path + str(count) + ".png")
     frame = pygame.transform.scale(frame, (block_tx_width, block_tx_height))
     grass_frames.append(frame)
     if count == 6:
@@ -267,7 +277,7 @@ while True:
 count = 0
 while True:
     count += 1
-    frame = pygame.image.load(Path(stone_animation_path + str(count) + ".png"))
+    frame = pygame.image.load(stone_animation_path + str(count) + ".png")
     frame = pygame.transform.scale(frame, (block_tx_width, block_tx_height))
     stone_frames.append(frame)
     if count == 7:
@@ -277,7 +287,7 @@ count = 0
 
 while True:
     count += 1
-    frame = pygame.image.load(Path(compact_dirt_animation_path + str(count) + ".png"))
+    frame = pygame.image.load(compact_dirt_animation_path + str(count) + ".png")
     frame = pygame.transform.scale(frame, (block_tx_width, block_tx_height))
     compact_dirt_frames.append(frame)
     if count == 3:
@@ -289,7 +299,7 @@ while True:
     count += 1
     if count == 145:
         count += 38
-    frame = pygame.image.load(Path(day_night_path + str(count) + ".png"))
+    frame = pygame.image.load(day_night_path + str(count) + ".png")
     frame = pygame.transform.scale(frame, (width, height))
     time_frames.append(frame)
     if count == 296:
@@ -356,7 +366,6 @@ else:
     ypos = 1
 
     while True:
-
         if ypos == 1:
             block = cube(0, 0, xpos * 50, ypos * 50, "stone", stone_texture, pygame.Rect(50, 50, 50, 50), 7)
             xpos += 1
@@ -500,7 +509,16 @@ save_quit_button.centery = height / 1.5
 save_quit_button.centerx = width / 2
 save_quit_button_tx = pygame.transform.scale(button_tx, (save_quit_button.width, save_quit_button.height))
 
-
+def select_pointer(selected_pointer):
+    if selected_pointer == "grass":
+        selected_pointer = grass_pointer
+    elif selected_pointer == "compact_dirt":
+        selected_pointer = dirt_pointer
+    elif selected_pointer == "stone":
+        selected_pointer = stone_pointer
+    else:
+        selected_pointer = normal_pointer
+    return selected_pointer
 def save(blocks):
     file = open(world_name + ".txt", "w")
     for block in blocks:
@@ -545,7 +563,7 @@ def freeze():
                 pygame.quit()
                 run = False
         draw_graphics(player, blocks, selection, game_time, time_frames)
-        
+selected_pointer = normal_pointer
 player_info = player_stats()
 def draw_graphics(player, blocks, selection, game_time, time_frames):
     WIN.blit(time_frames[game_time], (0, 0))
@@ -586,7 +604,7 @@ def draw_graphics(player, blocks, selection, game_time, time_frames):
         WIN.blit(resume_text, resume_button)
         WIN.blit(save_quit_button_tx, save_quit_button)
         WIN.blit(save_quit_text, save_quit_button)
-    pygame.draw.rect(WIN, black, crusor)
+    WIN.blit(selected_pointer, crusor)
 
     pygame.display.update()
 
@@ -598,6 +616,7 @@ for x in range(255):
 while run:
     draw_graphics(player, blocks, selection, game_time, time_frames)
     clock.tick(fps)
+    selected_pointer = select_pointer(selected_pointer)
 
     frect = ftext.get_rect()
     frect.x = (width - frect.width) - 5
@@ -766,6 +785,8 @@ while run:
                 selection.in_use = True
                 selection.rect.x = (block.rect.x - 4)
                 selection.rect.y = (block.rect.y - 4)
+                selected_pointer = block.type
+                selected_pointer = select_pointer(selected_pointer)
 
                 if (mouse_pressed[2]):
                     if block.count == 0:
